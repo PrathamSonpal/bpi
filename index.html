@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bhavesh Plastic Industries</title>
+    <link rel="icon" href="Bhavesh Plastic Industries.png" type="image/x-icon">
+    <script>
+      if (localStorage.getItem('loggedIn') !== 'true') {
+        window.location.href = 'login.html';
+      }
+    </script>
+    <style>
+      /* Branding Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(to right, #3498db, #2ecc71);
+        color: white;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .header img {
+        height: 60px;
+        margin-right: 15px;
+      }
+
+      /* Card Layout */
+      .card {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      /* Body & Container */
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+        margin: 0;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 960px;
+        margin: auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Headings */
+      h1 {
+        font-size: 28px;
+        color: #2c3e50;
+        margin: 0;
+      }
+      h2, h3 {
+        color: #34495e;
+        margin-bottom: 10px;
+      }
+
+      /* Inputs & Selects */
+      input, select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+      input:focus, select:focus {
+        border-color: #3498db;
+        outline: none;
+      }
+
+      /* Base Button Style */
+      button {
+        background: linear-gradient(to right, #2ecc71, #27ae60);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+      }
+
+      /* Glowing Hover Effect */
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 12px rgba(46, 204, 113, 0.6); /* Green glow */
+      }
+
+      /* Specific Button Gradients */
+      button[onclick="addStock()"] {
+        background: linear-gradient(to right, #3498db, #2980b9);
+        box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+      }
+      button[onclick="addStock()"]:hover {
+        box-shadow: 0 0 12px rgba(52, 152, 219, 0.6); /* Blue glow */
+      }
+
+      button[onclick="recordSale()"] {
+        background: linear-gradient(to right, #2ecc71, #27ae60);
+        box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
+      }
+      button[onclick="recordSale()"]:hover {
+        box-shadow: 0 0 12px rgba(46, 204, 113, 0.6); /* Green glow */
+      }
+
+      button#showStock {
+        background: linear-gradient(to right, #3498db, #2980b9);
+        box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+      }
+      button#showStock:hover {
+        box-shadow: 0 0 12px rgba(52, 152, 219, 0.6); /* Blue glow */
+      }
+
+      button#showSales {
+        background: linear-gradient(to right, #2ecc71, #27ae60);
+        box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
+      }
+      button#showSales:hover {
+        box-shadow: 0 0 12px rgba(46, 204, 113, 0.6); /* Green glow */
+      }
+
+      button#showBalance {
+        background: linear-gradient(to right, #9b59b6, #8e44ad);
+        box-shadow: 0 4px 6px rgba(155, 89, 182, 0.3);
+      }
+      button#showBalance:hover {
+        box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); /* Purple glow */
+      }
+
+      /* Log Buttons */
+      .log-buttons {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .log-buttons button {
+        width: 30%;
+        margin: 10px;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 15px;
+      }
+      th, td {
+        padding: 12px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+      th {
+        background-color: #ecf0f1;
+        font-weight: bold;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #e0e0e0;
+      }
+
+      /* Sections */
+      .log-section {
+        margin-top: 30px;
+      }
+      .log-section table {
+        display: none;
+      }
+      .form-sections {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+      .form-box {
+        flex: 1;
+        min-width: 300px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      }
+
+      /* Filters */
+      #materialFilter, #filterOptions, #singleItemSelect {
+        margin-top: 30px;
+        text-align: center;
+      }
+      #materialFilter button, #filterOptions button {
+        background-color: #7f8c8d;
+        color: white;
+        margin: 5px;
+        padding: 10px 16px;
+        border-radius: 6px;
+      }
+      #singleItemDropdown {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        width: 300px;
+        margin-top: 10px;
+      }
+
+      /* Fade-in Animation */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .form-sections {
+          flex-direction: column;
+        }
+        .form-box {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .log-buttons button {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+        #singleItemDropdown {
+          width: 100%;
+        }
+        .container {
+          padding: 20px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+        img[alt="Logo"] {
+          height: 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center;">
+          <img src="Bhavesh Plastic Industries.png" alt="Logo" style="height: 100px; margin-right: 10px;">
+          <h1>Stock & Sales Log</h1>
+        </div>
+        <button onclick="logout()" style="background-color: #e74c3c;">Logout</button>
+      </div>
+      <a href="register-item.html" style="float: right; margin-bottom: 10px;">➕ Register New Item</a>
+
+      <div class="form-sections">
+        <div class="form-box">
+          <h3>Add Stock</h3>
+          <select id="itemName"></select>
+          <input type="number" id="itemQty" placeholder="Quantity" />
+          <button onclick="addStock()">Add Stock</button>
+        </div>
+        <div class="form-box">
+          <h3>Sales</h3>
+          <select id="saleItem"></select>
+          <input type="number" id="saleQty" placeholder="Quantity Sold" />
+          <button onclick="recordSale()">Sale</button>
+        </div>
+      </div>
+
+      <div class="log-buttons">
+        <button id="showStock" onclick="showLog('stock')">Added Stock</button>
+        <button id="showSales" onclick="showLog('sales')">Sales</button>
+        <button id="showBalance" onclick="showLog('balance')">Balance</button>
+      </div>
+
+      <div class="log-section">
+        <table id="stockTable"><thead><tr><th>Item</th><th>Quantity</th><th>Timestamp</th></tr></thead><tbody></tbody></table>
+        <table id="salesTable"><thead><tr><th>Item</th><th>Quantity Sold</th><th>Timestamp</th></tr></thead><tbody></tbody></table>
+        <table id="balanceTable"><thead><tr><th>Item</th><th>Balance Quantity</th></tr></thead><tbody></tbody></table>
+      </div>
+
+      <div id="materialFilter" style="display: none;">
+        <h3>Filter by Material</h3>
+        <button onclick="selectMaterial('Stainless Steel (SS)')">Stainless Steel (SS)</button>
+        <button onclick="selectMaterial('Malleable')">Malleable</button>
+      </div>
+
+      <div id="filterOptions" style="display: none;">
+        <button onclick="showFilteredBalance('all')">All</button>
+        <button onclick="showFilteredBalance('single')">Single</button>
+      </div>
+
+      <div id="singleItemSelect" style="display: none;">
+        <select id="singleItemDropdown" onchange="showSingleItemBalance()">
+          <option value="">-- Select Item --</option>
+        </select>
+      </div>
+    </div>
+
+    <script>
+      let stockLog = JSON.parse(localStorage.getItem("stockLog")) || [];
+      let salesLog = JSON.parse(localStorage.getItem("salesLog")) || [];
+      let selectedMaterial = "";
+
+      function logout() {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("username");
+        window.location.href = "login.html";
+      }
+
+      function addStock() {
+        const name = document.getElementById("itemName").value;
+        const qty = parseInt(document.getElementById("itemQty").value);
+        if (!name || isNaN(qty)) {
+          alert("Enter valid stock item and quantity.");
+          return;
+        }
+        const time = new Date().toLocaleString();
+        stockLog.push({ name, quantity: qty, time });
+        localStorage.setItem("stockLog", JSON.stringify(stockLog));
+        document.getElementById("itemName").value = "";
+        document.getElementById("itemQty").value = "";
+        renderStock();
+        renderBalance();
+      }
+
+      function recordSale() {
+        const user = localStorage.getItem("username");
+        if (user !== "ADMIN1" && user !== "ADMIN2") {
+          alert("Only ADMIN1 and ADMIN2 can record sales.");
+          return;
+        }
+        const name = document.getElementById("saleItem").value;
+        const qty = parseInt(document.getElementById("saleQty").value);
+        if (!name || isNaN(qty)) {
+          alert("Enter valid item and quantity.");
+          return;
+        }
+        const time = new Date().toLocaleString();
+        salesLog.push({ name, quantity: qty, time });
+        localStorage.setItem("salesLog", JSON.stringify(salesLog));
+        document.getElementById("saleItem").value = "";
+        document.getElementById("saleQty").value = "";
+        renderSales();
+        renderBalance();
+      }
+
+      function renderStock() {
+        const tbody = document.querySelector("#stockTable tbody");
+        tbody.innerHTML = "";
+        stockLog.forEach(entry => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${entry.name}</td><td>${entry.quantity}</td><td>${entry.time}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+    
+      function renderSales() {
+        const tbody = document.querySelector("#salesTable tbody");
+        tbody.innerHTML = "";
+        salesLog.forEach(entry => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${entry.name}</td><td>${entry.quantity}</td><td>${entry.time}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+
+      function renderBalance() {
+        const balance = {};
+
+        stockLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) + entry.quantity;
+        });
+
+        salesLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) - entry.quantity;
+        });
+
+        const tbody = document.querySelector("#balanceTable tbody");
+        tbody.innerHTML = "";
+
+        Object.keys(balance).forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${item}</td><td>${balance[item]}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+
+      function showLog(type) {
+        const stockTable = document.getElementById("stockTable");
+        const salesTable = document.getElementById("salesTable");
+        const balanceTable = document.getElementById("balanceTable");
+
+        stockTable.style.display = "none";
+        salesTable.style.display = "none";
+        balanceTable.style.display = "none";
+
+        document.getElementById("materialFilter").style.display = "none";
+        document.getElementById("filterOptions").style.display = "none";
+        document.getElementById("singleItemSelect").style.display = "none";
+
+        stockTable.classList.remove("fade-in");
+        salesTable.classList.remove("fade-in");
+        balanceTable.classList.remove("fade-in");
+
+        if (type === "stock") {
+          stockTable.style.display = "table";
+          stockTable.classList.add("fade-in");
+        } else if (type === "sales") {
+          salesTable.style.display = "table";
+          salesTable.classList.add("fade-in");
+        } else if (type === "balance") {
+          document.getElementById("materialFilter").style.display = "block";
+        }
+      }
+
+      function populateItemDropdowns() {
+        const items = JSON.parse(localStorage.getItem("registeredItems")) || [];
+        const itemNameSelect = document.getElementById("itemName");
+        const saleItemSelect = document.getElementById("saleItem");
+
+        itemNameSelect.innerHTML = '<option value="">-- Select Item --</option>';
+        saleItemSelect.innerHTML = '<option value="">-- Select Item --</option>';
+
+        items.forEach(item => {
+          const option1 = document.createElement("option");
+          option1.value = item;
+          option1.textContent = item;
+          itemNameSelect.appendChild(option1);
+
+          const option2 = document.createElement("option");
+          option2.value = item;
+          option2.textContent = item;
+          saleItemSelect.appendChild(option2);
+        });
+      }
+
+      function selectMaterial(material) {
+        selectedMaterial = material;
+        document.getElementById("filterOptions").style.display = "block";
+        document.getElementById("singleItemSelect").style.display = "none";
+        document.getElementById("balanceTable").style.display = "none";
+      }
+
+      function showFilteredBalance(mode) {
+      const items = JSON.parse(localStorage.getItem("registeredItems")) || [];
+
+      if (mode === "all") {
+        const filteredItems = items.filter(item => item.includes(selectedMaterial));
+        const balance = {};
+
+        stockLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) + entry.quantity;
+        });
+
+        salesLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) - entry.quantity;
+        });
+
+        const tbody = document.querySelector("#balanceTable tbody");
+        tbody.innerHTML = "";
+        document.getElementById("balanceTable").style.display = "table";
+
+        filteredItems.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${item}</td><td>${balance[item] || 0}</td>`;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("singleItemSelect").style.display = "none";
+
+      } else if (mode === "single") {
+        const productNames = [...new Set(
+          items
+            .filter(item => item.includes(selectedMaterial))
+            .map(item => item.split(" - ")[0])
+        )];
+
+        const dropdown = document.getElementById("singleItemDropdown");
+        dropdown.innerHTML = '<option value="">-- Select Product Name --</option>';
+        productNames.forEach(name => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          dropdown.appendChild(option);
+        });
+
+          document.getElementById("singleItemSelect").style.display = "block";
+          document.getElementById("balanceTable").style.display = "none";
+        }
+      }
+
+      function showSingleItemBalance() {
+        const selectedName = document.getElementById("singleItemDropdown").value;
+        const items = JSON.parse(localStorage.getItem("registeredItems")) || [];
+        const matchingItems = items.filter(item => item.startsWith(selectedName));
+
+        const balance = {};
+        stockLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) + entry.quantity;
+        });
+        salesLog.forEach(entry => {
+          balance[entry.name] = (balance[entry.name] || 0) - entry.quantity;
+        });
+
+        const tbody = document.querySelector("#balanceTable tbody");
+        tbody.innerHTML = "";
+        document.getElementById("balanceTable").style.display = "table";
+
+        matchingItems.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${item}</td><td>${balance[item] || 0}</td>`;
+          tbody.appendChild(row);
+        });
+      }
+
+      populateItemDropdowns();
+      renderStock();
+      renderSales();
+      renderBalance();
+      showLog("stock"); // Default view
+
+    </script>
+  </body>
+</html>
