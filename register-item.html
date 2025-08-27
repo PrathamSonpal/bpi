@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Item - Bhavesh Plastic Industries</title>
+
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    a {
+      float: right;
+      text-decoration: none;
+      color: #3498db;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    button {
+      padding: 12px 20px;
+      margin: 10px 10px 20px 0;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-btn {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .add-btn:hover {
+      background-color: #219150;
+    }
+
+    .remove-btn {
+      background-color: #e74c3c;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .remove-btn:hover {
+      background-color: #c0392b;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register New Item</h2>
+    <a href="index.html">Stock & Sales Log</a>
+    <input type="text" id="itemName" placeholder="Product Name" />
+    <input type="text" id="itemSize" placeholder="Size" />
+    <select id="itemMaterial">
+      <option value="">Select Material</option>
+      <option value="Stainless Steel (SS)">Stainless Steel (SS)</option>
+      <option value="Malleable">Malleable</option>
+    </select>
+    <button class="add-btn" onclick="addItem()">Add Item</button>
+
+    <h3>Registered Items</h3>
+    <ul id="itemList"></ul>
+  </div>
+
+  <script>
+    const user = localStorage.getItem("username");
+    if (user !== "ADMIN1" && user !== "ADMIN2") {
+      alert("Access denied.");
+      window.location.href = "index.html";
+    }
+
+    let items = JSON.parse(localStorage.getItem("registeredItems")) || [];
+
+    function addItem() {
+      const name = document.getElementById("itemName").value.trim();
+      const size = document.getElementById("itemSize").value.trim();
+      const material = document.getElementById("itemMaterial").value.trim();
+
+      if (!name || !size || !material) {
+        alert("All fields are required.");
+        return;
+      }
+
+      const fullName = `${name} - ${size} - ${material}`;
+      items.push(fullName);
+      localStorage.setItem("registeredItems", JSON.stringify(items));
+      renderItems();
+      document.getElementById("itemName").value = "";
+      document.getElementById("itemSize").value = "";
+      document.getElementById("itemMaterial").value = "";
+    }
+
+    function removeItem(index) {
+      items.splice(index, 1);
+      localStorage.setItem("registeredItems", JSON.stringify(items));
+      renderItems();
+    }
+
+    function renderItems() {
+      const list = document.getElementById("itemList");
+      list.innerHTML = "";
+      items.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        const btn = document.createElement("button");
+        btn.textContent = "Remove";
+        btn.className = "remove-btn";
+        btn.onclick = () => removeItem(index);
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+    }
+
+    renderItems();
+  </script>
+</body>
+</html>

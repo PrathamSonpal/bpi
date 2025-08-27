@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - Bhavesh Plastic Industries</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    input {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+    .login-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .login-header img {
+      height: 50px;
+    }
+    .change-password-box {
+      display: none;
+      margin-top: 20px;
+    }
+    .change-password-button {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .change-password-button button {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 14px;
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <div class="login-header">
+      <img src="Bhavesh Plastic Industries.png" alt="Logo">
+      <h2>Login</h2>
+    </div>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="change-password-button">
+      <button onclick="toggleChangePassword()">Change Password</button>
+    </div>
+
+    <div class="change-password-box" id="changeBox">
+      <input type="password" id="oldPassword" placeholder="Old Password">
+      <input type="password" id="newPassword" placeholder="New Password">
+      <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+      <button onclick="changePassword()">Submit</button>
+    </div>
+
+    <div class="error" id="errorMsg"></div>
+    <div class="success" id="successMsg"></div>
+  </div>
+
+  <script>
+    localStorage.setItem("isLoggedIn", "true");
+    
+    // Initialize default passwords if not set
+    if (!localStorage.getItem('ADMIN1_pass')) {
+      localStorage.setItem('ADMIN1_pass', '123456');
+    }
+    if (!localStorage.getItem('ADMIN2_pass')) {
+      localStorage.setItem('ADMIN2_pass', '888888');
+    }
+
+    function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
+      errorMsg.textContent = '';
+      successMsg.textContent = '';
+
+      const storedPass = localStorage.getItem(user + '_pass');
+
+      if ((user === 'ADMIN1' || user === 'ADMIN2') && pass === storedPass) {
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('username', user);
+        window.location.href = 'index.html';
+      } else {
+        errorMsg.textContent = 'Invalid username or password.';
+      }
+    }
+
+    function toggleChangePassword() {
+      const box = document.getElementById('changeBox');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function changePassword() {
+      const user = document.getElementById('username').value.trim();
+      const oldPass = document.getElementById('oldPassword').value.trim();
+      const newPass = document.getElementById('newPassword').value.trim();
+      const confirmPass = document.getElementById('confirmPassword').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
+      errorMsg.textContent = '';
+      successMsg.textContent = '';
+
+      if (user !== 'ADMIN1' && user !== 'ADMIN2') {
+        errorMsg.textContent = 'Enter a valid admin username.';
+        return;
+      }
+
+      const storedPass = localStorage.getItem(user + '_pass');
+      if (oldPass !== storedPass) {
+        errorMsg.textContent = 'Old password is incorrect.';
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        errorMsg.textContent = 'New passwords do not match.';
+        return;
+      }
+
+      localStorage.setItem(user + '_pass', newPass);
+      successMsg.textContent = 'Password changed successfully.';
+      document.getElementById('oldPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+    }
+  </script>
+</body>
+</html>
