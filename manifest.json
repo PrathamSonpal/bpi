@@ -1,17 +1,14 @@
 {
-  "name": "BPI Stock Management",
+  "name": "Bhavesh Plastic Industries",
   "short_name": "BPI",
-  "description": "Inventory and sales management system for Bharath Precision Industries.",
-  "id": "https://parthasampath1.github.io/bpi/",
-  "start_url": "login.html",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3498db",
-  "scope": "./",
-  "launch_handler": {
-    "client_mode": "focus-existing"
-  },
   "icons": [
+    {
+      "src": "Bhavesh Plastic Industries.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
     {
       "src": "Bhavesh Plastic Industries.png",
       "sizes": "512x512",
@@ -19,5 +16,3 @@
     }
   ]
 }
-
-
