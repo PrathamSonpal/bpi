@@ -2,10 +2,19 @@
 <html>
 <head>
   <title>Login - Bhavesh Plastic Industries</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.php">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="Bhavesh Plastic Industries.png" type="image/x-icon">
   <link rel="manifest" href="manifest.json">
+  <script>
+    // ✅ Redirect to index if already logged in
+    if (sessionStorage.getItem('loggedIn') === 'true') {
+      window.location.href = 'index.html';
+    }
+
+    // ✅ Base URL for backend API
+    const API_BASE = "https://bpi.infinityfreeapp.com/";
+  </script>
 </head>
 <body>
   <div class="login-box">
@@ -31,17 +40,17 @@
     <div class="change-password-box" id="changeBox" style="display:none;">
       <div class="password-row">
         <input type="password" id="oldPassword" placeholder="Old Password">
-        <button type="button" class="pass-toggle-btn" onclick="togglePassword('oldPassword', this)">👁️</button>
+        <span class="pass-toggle-btn" onclick="togglePassword('oldPassword', this)">👁️</span>
       </div>
 
       <div class="password-row">
         <input type="password" id="newPassword" placeholder="New Password">
-        <button type="button" class="pass-toggle-btn" onclick="togglePassword('newPassword', this)">👁️</button>
+        <span class="pass-toggle-btn" onclick="togglePassword('newPassword', this)">👁️</span>
       </div>
 
       <div class="password-row">
         <input type="password" id="confirmPassword" placeholder="Confirm New Password">
-        <button type="button" class="pass-toggle-btn" onclick="togglePassword('confirmPassword', this)">👁️</button>
+        <span class="pass-toggle-btn" onclick="togglePassword('confirmPassword', this)">👁️</span>
       </div>
 
       <button onclick="changePassword()">Submit</button>
@@ -58,7 +67,7 @@
       const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
 
-      fetch("login.php", {
+      fetch(API_BASE + "login.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ username: user, password: pass })
@@ -66,10 +75,11 @@
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          localStorage.setItem('loggedIn', 'true');
-          localStorage.setItem('username', data.username);
-          localStorage.setItem('user_id', data.user_id);
-          localStorage.setItem('role', data.role);
+          // ✅ Store login in sessionStorage
+          sessionStorage.setItem('loggedIn', 'true');
+          sessionStorage.setItem('username', data.username);
+          sessionStorage.setItem('user_id', data.user_id);
+          sessionStorage.setItem('role', data.role);
           window.location.href = 'index.html';
         } else {
           errorMsg.textContent = 'Invalid username or password.';
@@ -111,7 +121,7 @@
         return;
       }
 
-      fetch("change_password.php", {
+      fetch(API_BASE + "change_password.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
@@ -136,14 +146,8 @@
 
     function togglePassword(id, el) {
       const passwordField = document.getElementById(id);
-      if (passwordField.type === "password") {
-        passwordField.type = "text";
-      } else {
-        passwordField.type = "password";
-      }
+      passwordField.type = (passwordField.type === "password") ? "text" : "password";
     }
-
   </script>
 </body>
 </html>
-
