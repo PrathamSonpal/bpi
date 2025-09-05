@@ -4,12 +4,11 @@
     <title>Bhavesh Plastic Industries</title>
     <link rel="icon" href="Bhavesh Plastic Industries.png" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.php">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-      // Check login status
-      if (localStorage.getItem("loggedIn") !== "true") {
-        // Not logged in → go to login page
+      // Redirect to login if not logged in
+      if (sessionStorage.getItem("loggedIn") !== "true") {
         window.location.href = "login.html";
       }
     </script>
@@ -85,13 +84,13 @@
             <tr>
               <th>Item</th>
               <th>Quantity</th>
+              <th>Added By</th>
               <th>Timestamp</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
 
-        <!-- ✅ Sales table updated -->
         <table id="salesTable">
           <thead>
             <tr>
@@ -123,21 +122,21 @@
       let salesLog = [];
 
       function logout() {
-        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = "login.html";
       }
 
       function addStock() {
         const item_id = document.getElementById("itemName").value;
         const qty = parseInt(document.getElementById("itemQty").value);
-        const user_id = localStorage.getItem("user_id");
+        const user_id = sessionStorage.getItem("user_id");
 
         if (!item_id || isNaN(qty) || !user_id) {
           alert("Enter valid item and quantity.");
           return;
         }
 
-        fetch("record_stock.php", {
+        fetch("https://bpi.infinityfreeapp.com/record_stock.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({ item_id, quantity: qty, added_by: user_id })
@@ -155,14 +154,14 @@
         const item_id = document.getElementById("saleItem").value;
         const party_name = document.getElementById("partyName").value.trim();
         const qty = parseInt(document.getElementById("saleQty").value);
-        const user_id = localStorage.getItem("user_id");
+        const user_id = sessionStorage.getItem("user_id");
 
         if (!item_id || !party_name || isNaN(qty) || !user_id) {
           alert("Enter valid item, party name, and quantity.");
           return;
         }
 
-        fetch("record_sale.php", {
+        fetch("https://bpi.infinityfreeapp.com/record_sale.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({ item_id, party_name, quantity: qty, sold_by: user_id })
@@ -179,9 +178,9 @@
 
       function fetchAndRenderLogs() {
         Promise.all([
-          fetch("get_items.php").then(res => res.json()),
-          fetch("get_stock_log.php").then(res => res.json()),
-          fetch("get_sales_log.php").then(res => res.json())
+          fetch("https://bpi.infinityfreeapp.com/get_items.php").then(res => res.json()),
+          fetch("https://bpi.infinityfreeapp.com/get_stock_log.php").then(res => res.json()),
+          fetch("https://bpi.infinityfreeapp.com/get_sales_log.php").then(res => res.json())
         ]).then(([items, stock, sales]) => {
           registeredItems = items;
           stockLog = stock;
@@ -216,7 +215,13 @@
         log.forEach(entry => {
           const item = registeredItems.find(i => i.id == entry.item_id);
           const name = item ? `${item.name} - ${item.size} - ${item.material}` : 'Unknown';
-          tbody.innerHTML += `<tr><td>${name}</td><td>${entry.quantity}</td><td>${entry.timestamp}</td></tr>`;
+          const addedBy = entry.added_by_username || entry.added_by || "Unknown";
+          tbody.innerHTML += `<tr>
+            <td>${name}</td>
+            <td>${entry.quantity}</td>
+            <td>${addedBy}</td>
+            <td>${entry.timestamp}</td>
+          </tr>`;
         });
       }
 
@@ -228,7 +233,7 @@
             ? `${entry.item_name} - ${entry.size} - ${entry.material}`
             : "Unknown";
           const party = entry.party_name ? entry.party_name : "N/A";
-          const soldBy = entry.sold_by ? entry.sold_by : "Unknown";
+          const soldBy = entry.sold_by_username || entry.sold_by || "Unknown";
           const date = entry.timestamp;
 
           tbody.innerHTML += `
@@ -267,7 +272,7 @@
       }
 
       function renderLowStockAlert() {
-        const LOW_STOCK_THRESHOLD = 10000;
+        const LOW_STOCK_THRESHOLD = 1500;
         const alertTable = document.getElementById("lowStockAlert");
         const alertList = document.getElementById("lowStockList");
         alertList.innerHTML = "";
@@ -397,4 +402,3 @@
     </script>
   </body>
 </html>
-
