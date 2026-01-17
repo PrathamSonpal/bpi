@@ -1,0 +1,3 @@
+[22-Oct-2025 12:17:40 America/New_York] [save_casting.php] SQL Error: Column 'handle_id' cannot be null
+[22-Oct-2025 12:18:03 America/New_York] [save_casting.php] Error: Required fields missing: casting_date, metalin_weight, total_pcs and melo are required.
+[22-Oct-2025 12:18:56 America/New_York] [save_casting.php SQL] Column 'handle_id' cannot be null

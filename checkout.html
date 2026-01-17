@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPI - Checkout</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font - Inter -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .message-box {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 bg-gray-100">
+
+    <!-- Header -->
+    <header class="w-full max-w-6xl bg-white rounded-lg shadow-md p-6 mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <!-- Bhavesh Plastic Industry Logo -->
+            <img src="https://placehold.co/48x48/007BFF/FFFFFF?text=BPI" alt="Bhavesh Plastic Industry Logo" class="w-12 h-12 rounded-full">
+            <h1 class="text-3xl font-bold text-gray-800">Bhavesh Plastic Industry</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="order_page.html" class="text-gray-600 hover:text-blue-600 font-medium">Products</a></li>
+                    <li><a href="contact.html" class="text-gray-600 hover:text-blue-600 font-medium">Contact</a></li>
+                    <li><a href="cart.html" class="text-white bg-blue-600 px-4 py-2 rounded-lg font-bold shadow-md hover:bg-blue-700 transition-colors duration-200">Cart</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-2xl bg-white rounded-lg shadow-xl p-8 mb-8">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Checkout</h2>
+        <div id="checkout-content">
+            <div id="cart-summary" class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
+                <div id="summary-items" class="border-b border-gray-200 pb-4 mb-4">
+                    <!-- Cart items summary will be dynamically inserted here -->
+                </div>
+                <div class="flex justify-between items-center font-bold text-lg">
+                    <span>Total:</span>
+                    <span id="summary-total">₹0.00</span>
+                </div>
+            </div>
+
+            <form id="checkout-form" class="space-y-4">
+                <h3 class="text-xl font-semibold mb-2">Customer Details</h3>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="mobile" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea id="address" name="address" rows="3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
+                <div>
+                    <label for="pincode" class="block text-sm font-medium text-gray-700">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                
+                <h3 class="text-xl font-semibold mb-2">Payment Method</h3>
+                <p class="text-gray-600">Your order will be processed as **Cash on Delivery**.</p>
+                
+                <div class="mt-6">
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                        Place Order (Cash on Delivery)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="w-full max-w-6xl text-center text-gray-500 text-sm mt-6">
+        &copy; 2024 Bhavesh Plastic Industry. All rights reserved.
+    </footer>
+    
+    <!-- Custom Message Box (hidden by default) -->
+    <div id="message-box" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 message-box">
+        <div class="bg-white rounded-lg p-6 shadow-lg text-center">
+            <p id="message-content" class="text-gray-800 font-semibold mb-4"></p>
+            <button class="close-btn bg-blue-600 text-white px-4 py-2 rounded-lg">OK</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkoutForm = document.getElementById('checkout-form');
+            const summaryItemsEl = document.getElementById('summary-items');
+            const summaryTotalEl = document.getElementById('summary-total');
+            const messageBox = document.getElementById('message-box');
+            const messageContent = document.getElementById('message-content');
+            const closeMessageBoxBtn = messageBox.querySelector('.close-btn');
+
+            function showMessageBox(message) {
+                messageContent.textContent = message;
+                messageBox.classList.remove('hidden');
+            }
+
+            closeMessageBoxBtn.addEventListener('click', () => {
+                messageBox.classList.add('hidden');
+                window.location.href = 'products.html'; // Redirect to products after confirmation
+            });
+
+            function getCartFromStorage() {
+                return JSON.parse(localStorage.getItem('cart') || '[]');
+            }
+            
+            function renderSummary() {
+                const cart = getCartFromStorage();
+                summaryItemsEl.innerHTML = '';
+                let total = 0;
+                
+                if (cart.length === 0) {
+                    showMessageBox('Your cart is empty. Please add items before checking out.');
+                    // Optional: redirect back to products.html after a delay if cart is empty
+                    return;
+                }
+
+                cart.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'flex justify-between text-gray-600 mb-2';
+                    itemEl.innerHTML = `
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+                    `;
+                    summaryItemsEl.appendChild(itemEl);
+                    total += item.price * item.quantity;
+                });
+                
+                summaryTotalEl.textContent = `₹${total.toFixed(2)}`;
+            }
+
+            checkoutForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(checkoutForm);
+                const orderDetails = Object.fromEntries(formData.entries());
+                const cart = getCartFromStorage();
+                
+                if (cart.length === 0) {
+                    showMessageBox('Your cart is empty. Please add items before checking out.');
+                    return;
+                }
+                
+                // Here you would typically send the order details to your backend server
+                // along with the cart data for processing.
+                console.log('Order submitted:', { ...orderDetails, cart, paymentMethod: 'Cash on Delivery' });
+                
+                showMessageBox('Order placed successfully! Your order will be processed as Cash on Delivery.');
+                localStorage.removeItem('cart'); // Clear the cart after successful order
+            });
+            
+            renderSummary();
+        });
+    </script>
+</body>
+</html>

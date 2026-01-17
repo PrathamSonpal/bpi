@@ -1,0 +1,72 @@
+<?php
+header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+
+// --- Database Connection ---
+$host = "sql100.infinityfree.com";
+$user = "if0_39812412";
+$pass = "Bpiapp0101";
+$db   = "if0_39812412_bpi_stock";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    echo json_encode(["success" => false, "error" => "Connection failed"]);
+    exit;
+}
+// $conn->query("SET time_zone = '+05:30'"); // Optional: Set timezone
+
+$balance_data = [];
+
+// 1. Get handles
+$handles = [];
+$result_handles = $conn->query("SELECT id, name FROM items ORDER BY name ASC");
+if ($result_handles && $result_handles->num_rows > 0) {
+    while ($row = $result_handles->fetch_assoc()) {
+        $handles[$row['id']] = $row['name'];
+    }
+}
+
+// Prepare statements
+$stmt_buffed = $conn->prepare("SELECT SUM(buffed_pcs) AS total_buffed FROM buffing_log WHERE handle_id = ?");
+$stmt_packed = $conn->prepare("SELECT SUM(packed_pcs) AS total_packed FROM packing_log WHERE handle_id = ?");
+
+// 2. Loop through handles
+foreach ($handles as $handle_id => $handle_name) {
+    // Get Opening Stock (from Buffing)
+    $opening_stock = 0;
+    $stmt_buffed->bind_param("i", $handle_id);
+    $stmt_buffed->execute();
+    $result_buffed = $stmt_buffed->get_result();
+    if ($result_buffed) {
+        $opening_stock = (int)($result_buffed->fetch_assoc()['total_buffed'] ?? 0);
+    }
+
+    // Get Total Packed
+    $total_packed = 0;
+    $stmt_packed->bind_param("i", $handle_id);
+    $stmt_packed->execute();
+    $result_packed = $stmt_packed->get_result();
+    if ($result_packed) {
+        $total_packed = (int)($result_packed->fetch_assoc()['total_packed'] ?? 0);
+    }
+
+    $balance = $opening_stock - $total_packed;
+
+    // Store data only if there's activity
+    if ($opening_stock > 0 || $total_packed > 0) {
+        $balance_data[] = [
+            "handle_id" => $handle_id,
+            "handle_name" => $handle_name,
+            "opening_stock" => $opening_stock, // Buffed pieces
+            "total_packed" => $total_packed,   // Packed pieces
+            "balance" => $balance             // Available to pack
+        ];
+    }
+}
+
+$stmt_buffed->close();
+$stmt_packed->close();
+$conn->close();
+
+echo json_encode(["success" => true, "data" => $balance_data]);
+?>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Bhavesh Plastic Industries</title>
+  <link rel="stylesheet" href="style_login.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="Bhavesh Plastic Industries.png" type="image/x-icon">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div class="login-box">
+    <div class="login-header">
+      <img src="Bhavesh Plastic Industries.png" alt="Logo">
+      <h2>Login</h2>
+    </div>
+
+    <div class="form-content">
+      <input type="text" id="username" placeholder="Username">
+
+      <div class="password-row">
+        <input type="password" id="password" placeholder="Password">
+        <span class="pass-toggle-btn" onclick="togglePassword('password')">👁️</span>
+      </div>
+
+      <button onclick="login()">Login</button>
+
+      <div class="change-password-button">
+        <button onclick="toggleChangePassword()">Change Password</button>
+      </div>
+      
+      <div class="change-password-box" id="changeBox">
+        <h4>Change Your Password</h4>
+        <div class="password-row">
+          <input type="password" id="oldPassword" placeholder="Old Password">
+          <span class="pass-toggle-btn" onclick="togglePassword('oldPassword')">👁️</span>
+        </div>
+
+        <div class="password-row">
+          <input type="password" id="newPassword" placeholder="New Password">
+          <span class="pass-toggle-btn" onclick="togglePassword('newPassword')">👁️</span>
+        </div>
+
+        <div class="password-row">
+          <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+          <span class="pass-toggle-btn" onclick="togglePassword('confirmPassword')">👁️</span>
+        </div>
+
+        <button onclick="changePassword()">Submit</button>
+      </div>
+
+      <div class="error" id="errorMsg"></div>
+      <div class="success" id="successMsg"></div>
+    </div>
+  </div>
+
+<script>
+  // Cache busting for CSS
+  const cssLink = document.querySelector('link[href="style_login.css"]');
+  if (cssLink) {
+    cssLink.href = `style_login.css?v=${new Date().getTime()}`;
+  }
+
+  async function login() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    errorMsg.textContent = '';
+    successMsg.textContent = '';
+
+    if (!user || !pass) {
+      errorMsg.textContent = "Please enter username and password.";
+      return;
+    }
+
+    try {
+      const res = await fetch("login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ username: user, password: pass }),
+        credentials: "include"
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        successMsg.textContent = 'Login successful! Redirecting...';
+
+        // Redirect based on role
+        if (data.role === 'casting')
+        {
+          setTimeout(() => { window.location.href = 'casting_page.php'; }, 1000);
+        } 
+        else if (data.role === 'turning')
+        {
+          setTimeout(() => { window.location.href = 'turning_page.php'; }, 1000);
+        }
+        else if (data.role === 'buff')
+        {
+          setTimeout(() => { window.location.href = 'buff_page.php'; }, 1000);
+        }
+        else if (data.role === 'packing')
+        {
+          setTimeout(() => { window.location.href = 'packing_page.php'; }, 1000);
+        }
+        else if (data.role === 'admin')
+        {
+          setTimeout(() => { window.location.href = 'index.php'; }, 1000);
+        }
+        else
+        {
+          setTimeout(() => { window.location.href = 'index.php'; }, 1000);
+        }
+
+      } else {
+        errorMsg.textContent = data.message || 'Invalid username or password.';
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      errorMsg.textContent = 'An error occurred. Please try again later.';
+    }
+  }
+
+  function toggleChangePassword() {
+    document.getElementById('changeBox').classList.toggle('active');
+  }
+
+  function changePassword() {
+    const user = document.getElementById('username').value.trim();
+    const oldPass = document.getElementById('oldPassword').value.trim();
+    const newPass = document.getElementById('newPassword').value.trim();
+    const confirmPass = document.getElementById('confirmPassword').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    errorMsg.textContent = '';
+    successMsg.textContent = '';
+
+    if (newPass !== confirmPass) {
+      errorMsg.textContent = 'New passwords do not match.';
+      return;
+    }
+    if (newPass.length < 6) {
+      errorMsg.textContent = 'New password must be at least 6 characters.';
+      return;
+    }
+
+    fetch("change_password.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        username: user,
+        old_password: oldPass,
+        new_password: newPass
+      })
+    })
+    .then(res => res.text())
+    .then(data => {
+      if (data.includes("success")) {
+        successMsg.textContent = 'Password changed successfully.';
+      } else {
+        errorMsg.textContent = data;
+      }
+    })
+    .catch(err => {
+      errorMsg.textContent = "Error changing password.";
+      console.error("Change password error:", err);
+    });
+  }
+
+  function togglePassword(id) {
+    const passwordField = document.getElementById(id);
+    passwordField.type = passwordField.type === "password" ? "text" : "password";
+  }
+</script>
+</body>
+</html>
