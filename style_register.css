@@ -1,0 +1,624 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* ================= VARIABLES ================= */
+:root {
+    --primary-color: #003366;   /* BPI Navy */
+    --accent-color: #007bff;    /* BPI Blue */
+    --accent-hover: #0056b3;
+    --text-color: #333;
+    --bg-color: #f4f6f9;
+    --white: #ffffff;
+    --border-color: #e1e4e8;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ================= GLOBAL ================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* ================= HEADER (ORIGINAL) ================= */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: linear-gradient(90deg, #003366, #0059b3);
+    color: #fff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    height: 44px;
+    width: 44px;
+    border-radius: 10px;
+    background: #fff;
+    padding: 4px;
+}
+
+.company-block h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.company-block p {
+    margin: -2px 0 0;
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+/* ================= NAV (ORIGINAL) ================= */
+.nav-links {
+    display: flex;
+    gap: 10px;
+    margin-left: 25px;
+}
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.nav-links a:hover {
+    background: rgba(255,255,255,0.2);
+}
+.nav-links a.active {
+    background: #007bff;
+}
+
+.logout-btn {
+    background: #dc3545;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #fff;
+    text-decoration: none;
+}
+.logout-btn:hover {
+    background: #b52d38;
+}
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main-content {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ================= CARDS ================= */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-header.row-between {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ================= MODERN FORM UI (NEW) ================= */
+
+/* Grid Layout */
+.modern-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    align-items: end; /* Aligns inputs and button at the bottom */
+}
+
+/* Input Wrappers */
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Inputs & Selects */
+.modern-form input[type="text"],
+.modern-form select,
+.modern-form input[type="file"] {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Left padding for icon */
+    border: 2px solid #e1e5ee;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #f8faff;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+    height: 50px;
+}
+
+/* Focus States */
+.modern-form input:focus,
+.modern-form select:focus {
+    background-color: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+/* Icons inside Inputs */
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 10;
+}
+.input-group:focus-within .input-icon {
+    color: var(--accent-color);
+}
+
+/* Select Arrow Styling */
+.modern-form select {
+    appearance: none;
+    cursor: pointer;
+}
+.select-arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    pointer-events: none;
+    font-size: 0.8rem;
+}
+
+/* File Input Styling */
+.file-group input[type="file"] {
+    padding-top: 10px;
+    background-color: #fff;
+    cursor: pointer;
+}
+.file-group input::file-selector-button {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    color: #4a5568;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Submit Button */
+.btn-submit {
+    height: 50px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* ================= MODERN SEARCH BAR ================= */
+.table-search {
+    position: relative;
+    width: 100%;
+    max-width: 320px; /* Slightly wider for better visibility */
+}
+
+/* The Input Field */
+.table-search input {
+    width: 100%;
+    padding: 12px 50px 12px 20px; /* Right padding for the icon button */
+    border: 2px solid transparent; /* No border initially for cleaner look */
+    border-radius: 50px;           /* Pill shape */
+    background-color: #f0f4f8;     /* Light gray background */
+    font-size: 0.95rem;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: inherit;
+}
+
+/* Hover State */
+.table-search input:hover {
+    background-color: #e9eff5;
+}
+
+/* Focus State (Active) */
+.table-search input:focus {
+    background-color: #ffffff;
+    border-color: var(--accent-color); /* BPI Blue */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15); /* Soft Blue Glow */
+}
+
+/* The Search Icon/Button */
+.search-btn {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #a0aec0;
+    font-size: 1rem;
+    cursor: default; /* It's just visual since search is automatic */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* Animate Icon on Input Focus */
+.table-search input:focus + .search-btn {
+    background-color: var(--accent-color);
+    color: #fff;
+    transform: translateY(-50%) rotate(90deg); /* subtle rotation effect */
+}
+
+/* ================= TABLE (FIXED & SCROLLABLE) ================= */
+.table-wrapper {
+    max-height: 500px;          /* Restricts height to show ~7 items */
+    overflow-y: auto;           /* Adds scrollbar if list is long */
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+/* Sticky Header */
+.styled-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f1f5fa;
+    color: var(--primary-color);
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f9fbff;
+}
+
+/* Table Images */
+.table-img {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+.no-img { color: #aaa; font-size: 0.8rem; font-style: italic; }
+
+/* Badges */
+.badge {
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Table Buttons */
+.btn-icon {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #fff;
+    margin: 0 2px;
+    transition: opacity 0.2s;
+}
+.btn-icon.edit { background-color: #007bff; }
+.btn-icon.delete { background-color: #dc3545; }
+.btn-icon:hover { opacity: 0.9; }
+
+/* ================= MODERN MODAL UI ================= */
+
+/* Overlay Background */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6); /* Darker dim */
+    backdrop-filter: blur(4px);      /* Blurs the background */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards; /* Smooth fade in */
+}
+
+/* Modal Box */
+.modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 550px; /* Slightly wider for side-by-side inputs */
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    overflow: hidden;
+    transform: scale(0.9);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /* Bouncy pop effect */
+}
+
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: #fff;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.close-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: rgba(255,255,255,0.8);
+    transition: color 0.2s;
+}
+.close-btn:hover { color: #fff; }
+
+/* Modal Form Layout */
+.modal-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Row for Side-by-Side Inputs */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Image Section Layout */
+.image-edit-section {
+    display: flex;
+    gap: 20px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px dashed #ccd;
+    margin-top: 5px;
+}
+
+.current-image-box, 
+.new-image-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+}
+
+/* Style the image generated by JS */
+#currentImage img {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Footer Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn-cancel {
+    background: #e2e8f0;
+    color: #4a5568;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-cancel:hover { background: #cbd5e0; }
+
+.modal-save-btn {
+    width: auto;      /* Override full width */
+    height: 42px;     /* Slightly smaller than main form button */
+    padding: 0 25px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+@keyframes popIn {
+    to { transform: scale(1); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; } /* Stack inputs on mobile */
+    .image-edit-section { flex-direction: column; }
+}
+
+/* ================= FOOTER (ORIGINAL) ================= */
+.footer {
+    background: #003366;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.85rem;
+    margin-top: 40px;
+}
+.footer strong { color: #00e676; }
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+    .hamburger { display: block; }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        right: 15px;
+        top: 70px;
+        background: #003366;
+        flex-direction: column;
+        padding: 10px;
+        border-radius: 8px;
+        width: 200px;
+        z-index: 200;
+    }
+    .nav-links.active { display: flex; }
+
+    .modern-form { grid-template-columns: 1fr; }
+    .card-header.row-between { flex-direction: column; align-items: flex-start; }
+    .table-search { max-width: 100%; margin-top: 10px; }
+}
+
+/* ================= FIX MODAL TEXT OVERLAP ================= */
+.modal-form input[type="text"],
+.modal-form select,
+.modal-form input[type="file"] {
+    padding-left: 45px !important; /* Pushes text to the right so icon fits */
+    height: 50px;                  /* Ensures same height as main form */
+    border: 2px solid #e1e5ee;
+    border-radius: 10px;
+    width: 100%;
+}
+
+/* Ensure the icon stays centered in the modal too */
+.modal-form .input-group .input-icon {
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+}
+
+/* ================= FORCE LOGOUT VISIBILITY ================= */
+
+/* 1. Desktop Default: Hide the mobile button, Show the desktop button */
+.mobile-only-btn {
+    display: none !important;
+}
+.desktop-only-btn {
+    display: inline-block !important;
+}
+
+/* 2. Mobile View: Switch them */
+@media (max-width: 768px) {
+    
+    /* Hide the outer right button */
+    .desktop-only-btn {
+        display: none !important;
+    }
+
+    /* Show the inner menu button */
+    .mobile-only-btn {
+        display: block !important;
+        background-color: #dc3545; /* Red */
+        margin-top: 15px;          /* Push it down to the bottom of the list */
+        text-align: center;        /* Center the text */
+        width: 100%;               /* Fill the menu width */
+    }
+    
+    /* Fix Table Actions Spacing on Mobile */
+    .btn-icon {
+        margin: 0 5px;       /* Add gap between Edit and Delete */
+        padding: 8px 12px;   /* Make them easier to tap */
+    }
+    
+    /* Ensure the Action column doesn't squash them */
+    .styled-table td:last-child {
+        min-width: 140px;
+        white-space: nowrap;
+    }
+}
